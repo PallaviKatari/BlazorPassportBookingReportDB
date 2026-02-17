@@ -1,0 +1,37 @@
+﻿@page "/booking-report/{BookingId:int}"
+@rendermode InteractiveServer
+
+@inject PdfService PdfService
+@inject IJSRuntime JS
+
+<h3>تحميل تقرير الحجز</h3>
+
+<button class="btn btn-primary" @onclick="Download" disabled="@isLoading">
+    @(isLoading ? "جار التحميل..." : "تحميل PDF")
+</button>
+
+@code {
+    [Parameter] public int BookingId { get; set; }
+    private bool isLoading = false;
+
+    async Task Download()
+    {
+        try
+        {
+            isLoading = true;
+
+            var pdf = await PdfService.GenerateBookingPdf(BookingId);
+            if (pdf == null || pdf.Length == 0) return;
+
+            var base64 = Convert.ToBase64String(pdf);
+            await JS.InvokeVoidAsync("downloadFile",
+                "BookingReport.pdf",
+                "application/pdf",
+                base64);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

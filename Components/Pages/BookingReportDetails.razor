@@ -1,0 +1,29 @@
+﻿@page "/booking-report1/{BookingId:int}"  
+@using PassportBookingReportDB.DTO
+@using PassportBookingReportDB.Services
+@rendermode InteractiveServer
+
+@inject IBookingService BookingService
+
+<h3>Booking Details</h3>
+
+@if (booking == null)
+{
+    <p>Loading booking...</p>
+}
+else
+{
+    <BookingDetailsTable Booking="booking" />
+}
+
+@code {
+    [Parameter] public int BookingId { get; set; }
+
+    private BookingDto booking;
+
+    // Use OnParametersSetAsync to handle route parameters
+    protected override async Task OnParametersSetAsync()
+    {
+        booking = await BookingService.GetBookingByIdAsync(BookingId);
+    }
+}

@@ -1,0 +1,68 @@
+﻿@using PassportBookingReportDB.DTO
+@inject PdfService PdfService
+@inject IJSRuntime JS
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Booking Code</th>
+            <th>Appointment Date</th>
+            <th>Office Name</th>
+            <th>Full Name</th>
+            <th>National ID</th>
+            <th>Gender</th>
+            <th>Relation</th>
+            <th>Birth Date</th>
+            <th>Phone Number</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Booking.BookingCode</td>
+            <td>@Booking.AppointmentDate?.ToString("yyyy/MM/dd")</td>
+            <td>@Booking.OfficeName</td>
+            <td>@Booking.FullName</td>
+            <td>@Booking.NationalId</td>
+            <td>@Booking.Gender</td>
+            <td>@Booking.Relation</td>
+            <td>@Booking.BirthDate?.ToString("yyyy-MM-dd")</td>
+            <td>@Booking.PhoneNumber</td>
+            <td>
+                <button class="btn btn-primary" @onclick="Download" disabled="@isLoading">
+                    @(isLoading ? "Downloading..." : "Download PDF")
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+@code {
+    [Parameter] public BookingDto Booking { get; set; }
+
+    private bool isLoading = false;
+
+    private async Task Download()
+    {
+        if (Booking == null) return;
+
+        try
+        {
+            isLoading = true;
+
+            var pdfBytes = await PdfService.GenerateBookingPdf(Booking.Id);
+            if (pdfBytes == null || pdfBytes.Length == 0) return;
+
+            var base64 = Convert.ToBase64String(pdfBytes);
+
+            await JS.InvokeVoidAsync("downloadFile",
+                "BookingReport.pdf",
+                "application/pdf",
+                base64);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

@@ -17,6 +17,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Booking> Bookings { get; set; }
 
+    public virtual DbSet<BookingsWithLogo> BookingsWithLogos { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=PassportBookingDb;Trusted_Connection=True;TrustServerCertificate=True;");
@@ -36,6 +38,23 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.OfficeName).HasMaxLength(200);
             entity.Property(e => e.PhoneNumber).HasMaxLength(50);
             entity.Property(e => e.Relation).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<BookingsWithLogo>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Bookings__3214EC0748D9FFB8");
+
+            entity.ToTable("BookingsWithLogo");
+
+            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.AppointmentDate).HasColumnType("datetime");
+            entity.Property(e => e.BookingCode).HasMaxLength(50);
+            entity.Property(e => e.FullName).HasMaxLength(100);
+            entity.Property(e => e.Gender).HasMaxLength(10);
+            entity.Property(e => e.NationalId).HasMaxLength(50);
+            entity.Property(e => e.OfficeName).HasMaxLength(100);
+            entity.Property(e => e.PhoneNumber).HasMaxLength(20);
+            entity.Property(e => e.Relation).HasMaxLength(50);
         });
 
         OnModelCreatingPartial(modelBuilder);

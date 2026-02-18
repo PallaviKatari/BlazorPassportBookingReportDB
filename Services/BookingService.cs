@@ -12,9 +12,10 @@ namespace PassportBookingReportDB.Services
             _context = context;
         }
 
-        public async Task<BookingDto> GetBookingByIdAsync(int bookingId)
+        public async Task<BookingDto> GetBookingByIdAsync(int bookingId) //1
         {
-            var b = await _context.Bookings.FindAsync(bookingId);
+            // select * from Bookings where bookingId=1;
+            var b = await _context.Bookings.FindAsync(bookingId); //1
             if (b == null) return null;
 
             return new BookingDto

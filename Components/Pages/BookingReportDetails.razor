@@ -13,17 +13,21 @@
 }
 else
 {
-    <BookingDetailsTable Booking="booking" />
+   @*  PARENT - CHILD COMPONENTS 
+       The info of the booking details will be passed to the child table - BookingDetailsTable
+   *@
+  
+    <BookingDetailsTable Booking="booking" /> 
 }
 
 @code {
     [Parameter] public int BookingId { get; set; }
 
-    private BookingDto booking;
+    private BookingDto booking; // All the info for BookingId 1
 
     // Use OnParametersSetAsync to handle route parameters
     protected override async Task OnParametersSetAsync()
     {
-        booking = await BookingService.GetBookingByIdAsync(BookingId);
+        booking = await BookingService.GetBookingByIdAsync(BookingId); //1
     }
 }

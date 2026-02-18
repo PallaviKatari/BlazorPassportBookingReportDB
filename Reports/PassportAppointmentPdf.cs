@@ -11,7 +11,7 @@ using System.Drawing.Imaging;
 
 public class PassportAppointmentPdf
 {
-    public byte[] Generate(Booking booking)
+    public byte[] Generate(Booking booking) // Booking model from the database - BookingId 1
     {
         QuestPDF.Settings.License = LicenseType.Community;
 
@@ -97,8 +97,8 @@ public class PassportAppointmentPdf
             Format = BarcodeFormat.CODE_128,
             Options = new EncodingOptions
             {
-                Height = 60,
-                Width = 250,
+                Height = 30,
+                Width = 150,
                 Margin = 0
             }
         };
